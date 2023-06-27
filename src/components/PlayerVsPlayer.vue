@@ -76,34 +76,31 @@ const handleClick = (indexCol,indexRow) => {
 
     }
 // duong cheo
-    for (let i = 1; i <= 4; i++) {
-        if (boards.value[indexRow][indexCol] === boards.value[indexRow-i][indexCol+1]) {
-            if (i == 4) {
-                if (boards.value[indexRow][indexCol] === boards.value[indexRow+i][indexCol+i]){
-                    console.log('ưin');
-                }
-            }
-        } else {
-            for (let j = 1; j <= 4; j++) {
-                if (boards.value[indexRow - i+1][indexCol + i - 1] === boards.value[indexRow  - i + 1+j][indexCol + i - 1 - j]) {
-                    if (j == 4) {
-                        if (boards.value[indexRow - i + 1][indexCol + i - 1] === boards.value[indexRow - i + 1 + j][indexCol + i - 1 - j]) {
-                            console.log('win2');
-                        }
-                    }
-
-                } else {
-                    break
+    for(let i=1;i<=4;i++){
+        if (boards.value[indexRow][indexCol]==boards.value[indexRow+i][indexCol-i]){
+            if(i==4){
+                if(boards.value[indexRow][indexCol] == boards.value[indexRow + i][indexCol - i]){
+                    console.log('win');
                 }
             }
         }
+        else{
+            for(let j=1;j<=4;j++){
+                if (boards.value[indexRow + i - 1][indexCol - i + 1]==boards.value[indexRow + i - 1-j][indexCol - i + 1+j]){
+                    if(j==4){
+                        if(boards.value[indexRow + i - 1][indexCol - i + 1] == boards.value[indexRow + i - 1 - j][indexCol - i + 1 + j]){
+                            console.log('win');
+                        }
+                    }
+                }else{
+                    break
+                }
+            }
 
+
+        }
     }
-
-
 }
-
-
 
 </script>
 <template>
