@@ -6,8 +6,8 @@ interface Props {
   indexRow: number;
   boards: {};
 }
-
 const props = defineProps<Props>();
+
 interface Emits {
   (event: "handleClick", indexCol: number, indexRow: number): void;
 }

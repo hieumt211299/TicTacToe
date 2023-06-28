@@ -16,14 +16,6 @@ const emit = defineEmits<Emits>();
 const handleClick = () => {
   emit("handleClick", props.indexCol);
 };
-
-const symbol = ref<string>("");
-if (props.boards[props.indexRow][props.indexCol] === 1) {
-  symbol.value = "X";
-}
-if (props.boards[props.indexRow][props.indexCol] === 2) {
-  symbol.value = "0";
-}
 </script>
 <template>
   <div

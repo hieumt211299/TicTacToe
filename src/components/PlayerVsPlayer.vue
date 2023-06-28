@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, provide } from "vue";
-import BoardGameRow from "./BoardGameRow.vue";
+import BoardGameRow from "./TableCaro/BoardGameRow.vue";
 
 interface Emits {
   (event: "handleClickOut"): void;
@@ -11,6 +11,8 @@ const boards = ref<{}>([]);
 const winner = ref<string>("");
 const size = ref<number>(20);
 const gameOver =ref<boolean>(false)
+const count=ref<number>(1)
+
 
 
 // create table
@@ -23,12 +25,20 @@ for (let i = 0; i < size.value; i++) {
 function location(row: number, col: number) {
   return boards.value[row][col];
 }
+
+
 const whenWin=()=>{
   winner.value=player1.value? 'O':'X'
   gameOver.value=!gameOver.value
 }
-
+const checkWin=(x)=>{
+ x==5? whenWin():0
+}
+const resetCount=()=>{
+  count.value=1
+}
 const handleClick = (indexCol, indexRow) => {
+
   if (boards.value[indexRow][indexCol] === "") {
     if (player1.value) {
       boards.value[indexRow][indexCol] = "X";
@@ -37,169 +47,243 @@ const handleClick = (indexCol, indexRow) => {
     }
     player1.value = !player1.value;
   }
-
   // hang ngang
-  for (let i = 1; i <= 4; i++) {
-    if (
-      boards.value[indexRow][indexCol] === boards.value[indexRow][indexCol + i]
-    ) {
-      if (
-        i == 4 &&
-        boards.value[indexRow][indexCol] ===
-          boards.value[indexRow][indexCol + i]
-      ) {
-        whenWin()
-      }
-    } else {
-      for (let j = 1; j <= 4; j++) {
-        if (indexCol + i - 1 >= 0 && indexCol + i - 1 - j >= 0) {
-          if (
-            boards.value[indexRow][indexCol + i - 1] ===
-            boards.value[indexRow][indexCol + i - 1 - j]
-          ) {
-            if (j == 4) {
-              if (
-                boards.value[indexRow][indexCol + i - 1] ===
-                boards.value[indexRow][indexCol + i - 1 - j]
-              ) {
-                whenWin()
-              }
-            }
-          } else {
-            break;
-          }
-        }
-      }
-      break;
-    }
+  // for (let i = 1; i <= 4; i++) {
+  //   if (
+  //     boards.value[indexRow][indexCol] === boards.value[indexRow][indexCol + i]
+  //   ) {
+  //     if (
+  //       i == 4 &&
+  //       boards.value[indexRow][indexCol] ===
+  //         boards.value[indexRow][indexCol + i]
+  //     ) {
+  //       whenWin()
+  //     }
+  //   } else {
+  //     for (let j = 1; j <= 4; j++) {
+  //       if (indexCol + i - 1 >= 0 && indexCol + i - 1 - j >= 0) {
+  //         if (
+  //           boards.value[indexRow][indexCol + i - 1] ===
+  //           boards.value[indexRow][indexCol + i - 1 - j]
+  //         ) {
+  //           if (j == 4) {
+  //             if (
+  //               boards.value[indexRow][indexCol + i - 1] ===
+  //               boards.value[indexRow][indexCol + i - 1 - j]
+  //             ) {
+  //               whenWin()
+  //             }
+  //           }
+  //         } else {
+  //           break;
+  //         }
+  //       }
+  //     }
+  //     break;
+  //   }
+  // }
+  resetCount()
+  for(let i=1;i<=4;i++){
+    if(boards.value[indexRow][indexCol] === boards.value[indexRow][indexCol + i]){
+      count.value++
+    }else break
   }
+  for (let i=1;i<=4;i++){
+    if(boards.value[indexRow][indexCol] === boards.value[indexRow][indexCol - i]){
+      count.value++
+    }else break
+  }
+  checkWin(count.value)
+
   //   // hang doc
-  for (let i = 1; i <= 4; i++) {
-    if (indexRow + i < size.value) {
-      if (
-        boards.value[indexRow][indexCol] ===
-        boards.value[indexRow + i][indexCol]
-      ) {
-        if (i == 4) {
-          if (
-            boards.value[indexRow][indexCol] ===
-            boards.value[indexRow + i][indexCol]
-          ) {
-            whenWin()
-          }
-        }
-      } else {
-        for (let j = 1; j <= 4; j++) {
-          if (indexRow + i - 1 >= 0 && indexRow + i - 1 - j >= 0) {
-            if (
-              boards.value[indexRow + i - 1][indexCol] ===
-              boards.value[indexRow + i - 1 - j][indexCol]
-            ) {
-              if (j == 4) {
-                if (
-                  boards.value[indexRow + i - 1][indexCol] ===
-                  boards.value[indexRow + i - 1 - j][indexCol]
-                ) {
-                  whenWin()
-                }
-              }
-            } else {
-              break;
-            } 
-          }
-        }
-        break;
-      }
+  // for (let i = 1; i <= 4; i++) {
+  //   if (indexRow + i < size.value) {
+  //     if (
+  //       boards.value[indexRow][indexCol] ===
+  //       boards.value[indexRow + i][indexCol]
+  //     ) {
+  //       if (i == 4) {
+  //         if (
+  //           boards.value[indexRow][indexCol] ===
+  //           boards.value[indexRow + i][indexCol]
+  //         ) {
+  //           whenWin()
+  //         }
+  //       }
+  //     } else {
+  //       for (let j = 1; j <= 4; j++) {
+  //         if (indexRow + i - 1 >= 0 && indexRow + i - 1 - j >= 0) {
+  //           if (
+  //             boards.value[indexRow + i - 1][indexCol] ===
+  //             boards.value[indexRow + i - 1 - j][indexCol]
+  //           ) {
+  //             if (j == 4) {
+  //               if (
+  //                 boards.value[indexRow + i - 1][indexCol] ===
+  //                 boards.value[indexRow + i - 1 - j][indexCol]
+  //               ) {
+  //                 whenWin()
+  //               }
+  //             }
+  //           } else {
+  //             break;
+  //           } 
+  //         }
+  //       }
+  //       break;
+  //     }
+  //   }
+  // }
+  resetCount()
+  for(let i=1;i<=4;i++){
+    if (indexRow + i < size.value){
+      if(boards.value[indexRow][indexCol] === 
+      boards.value[indexRow + i][indexCol]){
+        count.value++
+      }else break
     }
   }
-  //   // duong cheo
-  for (let i = 1; i <= 4; i++) {
-    if (indexCol - i >= 0 && indexRow + i < size.value) {
+  for(let i=1;i<=4;i++){
+     if (indexRow -i >= 0){
+      if( boards.value[indexRow][indexCol] === boards.value[indexRow -i][indexCol]){
+          count.value++
+        }else break
+     }
+  }
+    checkWin(count.value)
+
+    // duong cheo
+  // for (let i = 1; i <= 4; i++) {
+  //   if (indexCol - i >= 0 && indexRow + i < size.value) {
+  //     if (
+  //       boards.value[indexRow][indexCol] ===
+  //       boards.value[indexRow + i][indexCol - i]
+  //     ) {
+  //       if (i == 4) {
+  //         if (
+  //           boards.value[indexRow][indexCol] ===
+  //           boards.value[indexRow + i][indexCol - i]
+  //         ) {
+  //           whenWin()
+  //         }
+  //       }
+  //     } else {
+  //       for (let j = 1; j <= 4; j++) {
+  //         if (
+  //           indexRow + i - 1 >= 0 &&
+  //           indexCol - i + 1 >= 0 &&
+  //           indexRow + i - 1 - j >= 0 &&
+  //           indexCol - i + 1 + j >= 0
+  //         ) {
+  //           if (
+  //             boards.value[indexRow + i - 1][indexCol - i + 1] ==
+  //             boards.value[indexRow + i - 1 - j][indexCol - i + 1 + j]
+  //           ) {
+  //             if (j == 4) {
+  //               if (
+  //                 boards.value[indexRow + i - 1][indexCol - i + 1] ==
+  //                 boards.value[indexRow + i - 1 - j][indexCol - i + 1 + j]
+  //               ) {
+  //                 whenWin()
+  //               }
+  //             }
+  //           } else {
+  //             break;
+  //           }
+  //         }
+  //       }
+  //       break;
+  //     }
+  //   }
+  // }
+  resetCount()
+  for(let i=1;i<=4;i++){
+    if (indexCol - i >= 0 && indexRow + i < size.value){
       if (
         boards.value[indexRow][indexCol] ===
         boards.value[indexRow + i][indexCol - i]
-      ) {
-        if (i == 4) {
-          if (
-            boards.value[indexRow][indexCol] ===
-            boards.value[indexRow + i][indexCol - i]
-          ) {
-            whenWin()
-          }
-        }
-      } else {
-        for (let j = 1; j <= 4; j++) {
-          if (
-            indexRow + i - 1 >= 0 &&
-            indexCol - i + 1 >= 0 &&
-            indexRow + i - 1 - j >= 0 &&
-            indexCol - i + 1 + j >= 0
-          ) {
-            if (
-              boards.value[indexRow + i - 1][indexCol - i + 1] ==
-              boards.value[indexRow + i - 1 - j][indexCol - i + 1 + j]
-            ) {
-              if (j == 4) {
-                if (
-                  boards.value[indexRow + i - 1][indexCol - i + 1] ==
-                  boards.value[indexRow + i - 1 - j][indexCol - i + 1 + j]
-                ) {
-                  whenWin()
-                }
-              }
-            } else {
-              break;
-            }
-          }
-        }
-        break;
-      }
+      ){
+        count.value++
+      }else break
     }
   }
+  for(let i=1;i<=4;i++){
+    if(indexRow -i >= 0 && indexCol +i >= 0){
+      if (
+        boards.value[indexRow][indexCol] ===
+        boards.value[indexRow - i][indexCol + i]
+      ){
+        count.value++
+    }else break
+  }
+}
+checkWin(count.value)
 
-  for (let i = 1; i <= 4; i++) {
-    if (indexCol + i <= size.value && indexRow + i < size.value) {
+  // for (let i = 1; i <= 4; i++) {
+  //   if (indexCol + i <= size.value && indexRow + i < size.value) {
+  //     if (
+  //       boards.value[indexRow][indexCol] ===
+  //       boards.value[indexRow + i][indexCol + i]
+  //     ) {
+  //       if (i == 4) {
+  //         if (
+  //           boards.value[indexRow][indexCol] ===
+  //           boards.value[indexRow + i][indexCol + i]
+  //         ) {
+  //           whenWin()
+  //         }
+  //       }
+  //     } else {
+  //       for (let j = 1; j <= 4; j++) {
+  //         if (
+  //           indexRow + i - 1 - j >= 0 &&
+  //           indexRow + i - 1 - j < size.value &&
+  //           indexCol + i - 1 - j >= 0 &&
+  //           indexCol + i - 1 - j < size.value
+  //         ) {
+  //           if (
+  //             boards.value[indexRow + i - 1][indexCol + i - 1] ==
+  //             boards.value[indexRow + i - 1 - j][indexCol + i - 1 - j]
+  //           ) {
+  //             if (j == 4) {
+  //               if (
+  //                 boards.value[indexRow + i - 1][indexCol + i - 1] ==
+  //                 boards.value[indexRow + i - 1 - j][indexCol + i - 1 - j]
+  //               ) {
+  //                 whenWin()
+  //               }
+  //             }
+  //           } else {
+  //             break;
+  //           }
+  //         }
+  //       }
+  //       break;
+  //     }
+  //   }
+  // }
+  resetCount()
+  for(let i=1;i<=4;i++){
+    if (indexCol + i <= size.value && indexRow + i < size.value){
       if (
         boards.value[indexRow][indexCol] ===
         boards.value[indexRow + i][indexCol + i]
-      ) {
-        if (i == 4) {
-          if (
-            boards.value[indexRow][indexCol] ===
-            boards.value[indexRow + i][indexCol + i]
-          ) {
-            whenWin()
-          }
-        }
-      } else {
-        for (let j = 1; j <= 4; j++) {
-          if (
-            indexRow + i - 1 - j >= 0 &&
-            indexRow + i - 1 - j < size.value &&
-            indexCol + i - 1 - j >= 0 &&
-            indexCol + i - 1 - j < size.value
-          ) {
-            if (
-              boards.value[indexRow + i - 1][indexCol + i - 1] ==
-              boards.value[indexRow + i - 1 - j][indexCol + i - 1 - j]
-            ) {
-              if (j == 4) {
-                if (
-                  boards.value[indexRow + i - 1][indexCol + i - 1] ==
-                  boards.value[indexRow + i - 1 - j][indexCol + i - 1 - j]
-                ) {
-                  whenWin()
-                }
-              }
-            } else {
-              break;
-            }
-          }
-        }
-        break;
+      ){
+        count.value++
       }
     }
   }
+  for(let i=1;i<=4;i++){
+    if (indexCol - i >= 0 && indexRow - i >= 0){
+      if (
+        boards.value[indexRow][indexCol] ===
+        boards.value[indexRow - i][indexCol - i]
+      ){
+        count.value++
+      }else break
+    }
+  }
+  checkWin(count.value)
 };
 const resetAll=()=>{
     for (let i = 0; i < size.value; i++) {
