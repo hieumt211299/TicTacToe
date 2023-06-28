@@ -12,8 +12,13 @@ const player1=ref<boolean>(true)
 const boards = ref<{}>([]);
 // let data = "";
 // let size= ref<number>(3)
-for (let i = 0; i < 15; i++) {
-    boards.value[i] = new Array('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+const size=ref<number>(20)
+for (let i = 0; i < size.value; i++) {
+    // boards.value[i] = new Array('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+    boards.value[i]=new Array()
+    for(let j=0;j<size.value;j++){
+        boards.value[i].push('')
+    }
 }
 
 const handleClick = (indexCol,indexRow) => {

@@ -2,7 +2,7 @@
 import BoardGameCol from './BoardGameCol.vue'
 
 interface Props {
-    row: string[],
+    row: string [],
     indexRow:number,
     boards:{}
 }
