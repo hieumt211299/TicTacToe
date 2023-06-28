@@ -3,21 +3,29 @@ import { ref, provide } from "vue";
 import BoardGameRow from "./BoardGameRow.vue";
 
 interface Emits {
-  (event: "handleClick"): void;
+  (event: "handleClickOut"): void;
 }
 const emit = defineEmits<Emits>();
 const player1 = ref<boolean>(true);
 const boards = ref<{}>([]);
 const winner = ref<string>("");
-// let data = "";
-// let size= ref<number>(3)
-const size=ref<number>(20)
+const size = ref<number>(20);
+const gameOver =ref<boolean>(false)
+
+
+// create table
 for (let i = 0; i < size.value; i++) {
-    // boards.value[i] = new Array('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
-    boards.value[i]=new Array()
-    for(let j=0;j<size.value;j++){
-        boards.value[i].push('')
-    }
+  boards.value[i] = new Array();
+  for (let j = 0; j < size.value; j++) {
+    boards.value[i].push("");
+  }
+}
+function location(row: number, col: number) {
+  return boards.value[row][col];
+}
+const whenWin=()=>{
+  winner.value=player1.value? 'O':'X'
+  gameOver.value=!gameOver.value
 }
 
 const handleClick = (indexCol, indexRow) => {
@@ -29,112 +37,196 @@ const handleClick = (indexCol, indexRow) => {
     }
     player1.value = !player1.value;
   }
-  console.log(indexRow, indexCol);
+
   // hang ngang
   for (let i = 1; i <= 4; i++) {
     if (
       boards.value[indexRow][indexCol] === boards.value[indexRow][indexCol + i]
     ) {
-      if (i == 4) {
-        if (
-          boards.value[indexRow][indexCol] ===
+      if (
+        i == 4 &&
+        boards.value[indexRow][indexCol] ===
           boards.value[indexRow][indexCol + i]
-        ) {
-          console.log("win");
-        }
+      ) {
+        whenWin()
       }
     } else {
       for (let j = 1; j <= 4; j++) {
-        if (
-          boards.value[indexRow][indexCol + i - 1] ===
-          boards.value[indexRow][indexCol + i - 1 - j]
-        ) {
-          if (j == 4) {
-            if (
-              boards.value[indexRow][indexCol + i - 1] ===
-              boards.value[indexRow][indexCol + i - 1 - j]
-            ) {
-              console.log("win");
+        if (indexCol + i - 1 >= 0 && indexCol + i - 1 - j >= 0) {
+          if (
+            boards.value[indexRow][indexCol + i - 1] ===
+            boards.value[indexRow][indexCol + i - 1 - j]
+          ) {
+            if (j == 4) {
+              if (
+                boards.value[indexRow][indexCol + i - 1] ===
+                boards.value[indexRow][indexCol + i - 1 - j]
+              ) {
+                whenWin()
+              }
             }
+          } else {
+            break;
           }
-        } else {
-          break;
         }
       }
+      break;
     }
   }
-  // hang doc
+  //   // hang doc
   for (let i = 1; i <= 4; i++) {
-    if (
-      boards.value[indexRow][indexCol] === boards.value[indexRow + i][indexCol]
-    ) {
-      if (i == 4) {
-        if (
-          boards.value[indexRow][indexCol] ===
-          boards.value[indexRow + i][indexCol]
-        ) {
-          console.log("win");
+    if (indexRow + i < size.value) {
+      if (
+        boards.value[indexRow][indexCol] ===
+        boards.value[indexRow + i][indexCol]
+      ) {
+        if (i == 4) {
+          if (
+            boards.value[indexRow][indexCol] ===
+            boards.value[indexRow + i][indexCol]
+          ) {
+            whenWin()
+          }
         }
-      }
-    } else {
-      for (let j = 1; j <= 4; j++) {
-        if (
-          boards.value[indexRow + i - 1][indexCol] ===
-          boards.value[indexRow + i - 1 - j][indexCol]
-        ) {
-          if (j == 4) {
+      } else {
+        for (let j = 1; j <= 4; j++) {
+          if (indexRow + i - 1 >= 0 && indexRow + i - 1 - j >= 0) {
             if (
               boards.value[indexRow + i - 1][indexCol] ===
               boards.value[indexRow + i - 1 - j][indexCol]
             ) {
-              console.log("win");
-            }
+              if (j == 4) {
+                if (
+                  boards.value[indexRow + i - 1][indexCol] ===
+                  boards.value[indexRow + i - 1 - j][indexCol]
+                ) {
+                  whenWin()
+                }
+              }
+            } else {
+              break;
+            } 
           }
-        } else {
-          break;
         }
+        break;
       }
     }
   }
-  // duong cheo
+  //   // duong cheo
   for (let i = 1; i <= 4; i++) {
-    if (
-      boards.value[indexRow][indexCol] ==
-      boards.value[indexRow + i][indexCol - i]
-    ) {
-      if (i == 4) {
-        if (
-          boards.value[indexRow][indexCol] ==
-          boards.value[indexRow + i][indexCol - i]
-        ) {
-          console.log("win");
+    if (indexCol - i >= 0 && indexRow + i < size.value) {
+      if (
+        boards.value[indexRow][indexCol] ===
+        boards.value[indexRow + i][indexCol - i]
+      ) {
+        if (i == 4) {
+          if (
+            boards.value[indexRow][indexCol] ===
+            boards.value[indexRow + i][indexCol - i]
+          ) {
+            whenWin()
+          }
         }
-      }
-    } else {
-      for (let j = 1; j <= 4; j++) {
-        if (
-          boards.value[indexRow + i - 1][indexCol - i + 1] ==
-          boards.value[indexRow + i - 1 - j][indexCol - i + 1 + j]
-        ) {
-          if (j == 4) {
+      } else {
+        for (let j = 1; j <= 4; j++) {
+          if (
+            indexRow + i - 1 >= 0 &&
+            indexCol - i + 1 >= 0 &&
+            indexRow + i - 1 - j >= 0 &&
+            indexCol - i + 1 + j >= 0
+          ) {
             if (
               boards.value[indexRow + i - 1][indexCol - i + 1] ==
               boards.value[indexRow + i - 1 - j][indexCol - i + 1 + j]
             ) {
-              console.log("win");
+              if (j == 4) {
+                if (
+                  boards.value[indexRow + i - 1][indexCol - i + 1] ==
+                  boards.value[indexRow + i - 1 - j][indexCol - i + 1 + j]
+                ) {
+                  whenWin()
+                }
+              }
+            } else {
+              break;
             }
           }
-        } else {
-          break;
         }
+        break;
+      }
+    }
+  }
+
+  for (let i = 1; i <= 4; i++) {
+    if (indexCol + i <= size.value && indexRow + i < size.value) {
+      if (
+        boards.value[indexRow][indexCol] ===
+        boards.value[indexRow + i][indexCol + i]
+      ) {
+        if (i == 4) {
+          if (
+            boards.value[indexRow][indexCol] ===
+            boards.value[indexRow + i][indexCol + i]
+          ) {
+            whenWin()
+          }
+        }
+      } else {
+        for (let j = 1; j <= 4; j++) {
+          if (
+            indexRow + i - 1 - j >= 0 &&
+            indexRow + i - 1 - j < size.value &&
+            indexCol + i - 1 - j >= 0 &&
+            indexCol + i - 1 - j < size.value
+          ) {
+            if (
+              boards.value[indexRow + i - 1][indexCol + i - 1] ==
+              boards.value[indexRow + i - 1 - j][indexCol + i - 1 - j]
+            ) {
+              if (j == 4) {
+                if (
+                  boards.value[indexRow + i - 1][indexCol + i - 1] ==
+                  boards.value[indexRow + i - 1 - j][indexCol + i - 1 - j]
+                ) {
+                  whenWin()
+                }
+              }
+            } else {
+              break;
+            }
+          }
+        }
+        break;
       }
     }
   }
 };
+const resetAll=()=>{
+    for (let i = 0; i < size.value; i++) {
+  boards.value[i] = new Array();
+  for (let j = 0; j < size.value; j++) {
+    boards.value[i].push("");
+  }
+  gameOver.value=false
+
+}
+}
+const handleClickOut=()=>{
+  resetAll()
+  emit('handleClickOut')
+}
 </script>
 <template>
-  <div class="overflow-hidden">
-    <BoardGameRow
+  <div class="flex gap-5 relative">
+    <div class="absolute -left-32 top-2/4 -translate-y-1/2 flex flex-col" >
+      <button @click="handleClickOut" class="bg-[#F4F5FA] px-4 py-3 rounded-full border border-[#F0F0F6] shadow-xl mt-4">
+        Quit
+      </button><button @click="resetAll" class="bg-[#F4F5FA] px-4 py-3 rounded-full border border-[#F0F0F6] shadow-xl mt-4">
+        Play again
+      </button>
+    </div>
+    <div :class=" {'pointer-events-none':gameOver}">
+      <BoardGameRow
       v-for="(row, index) in boards"
       :key="index"
       :row="row"
@@ -142,6 +234,16 @@ const handleClick = (indexCol, indexRow) => {
       :boards="boards"
       @handle-click="handleClick"
     ></BoardGameRow>
+    </div>
+
+  </div>
+  <div class="bg-[#B3C890]  rounded-lg z-10 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-opacity-90" :class="{'hidden': !gameOver}">
+    <div class="p-10 rounded-xl">
+      <!-- headers content-->
+      <div class="flex flex-col justify-center items-center text-center">
+        <h1 class="max-w-sm font-bold font-sans  w-screen">{{ winner }} Win </h1>
+      </div>
+    </div>
   </div>
 </template>
 <style></style>

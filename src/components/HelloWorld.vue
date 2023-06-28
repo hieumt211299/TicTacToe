@@ -2,12 +2,13 @@
 import { ref } from "vue";
 
 // =====
-defineProps({
-  msg: String,
-});
 
+interface Emits {
+  (event: "handleClickPVP"): void;
+}
+const emit = defineEmits<Emits>();
 const handle1vs1 = () => {
-  console.log("1 vs 1");
+  emit('handleClickPVP');
 };
 const handle1vsbot = () => {
   console.log("1vs bot");
@@ -19,7 +20,7 @@ const handlebotvsbot = () => {
 
 <template>
   <div
-    class="flex items-center justify-center flex-col bg-[#B3C890] min-h-screen rounded-lg"
+    class="flex items-center justify-center flex-col bg-[#B3C890]  rounded-lg"
   >
     <!-- main card -->
     <div class="p-10 rounded-xl">

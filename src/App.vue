@@ -1,15 +1,26 @@
-<script setup>
+<script setup lang="ts">
 import HelloWorld from "./components/HelloWorld.vue";
 import PlayerVsPlayer from "./components/PlayerVsPlayer.vue";
+import { ref,unref } from "vue";
+
+const activePVP = ref<boolean>(false)
+const activeMain = ref<boolean>(true)
+const handleClickPVP=()=>{
+activePVP.value=!unref(activePVP);
+activeMain.value=!unref(activeMain)
+}
+const handleClickOut=()=>{
+  activePVP.value=!unref(activePVP);
+activeMain.value=!unref(activeMain)
+}
 </script>
 
 <template>
-  <HelloWorld
-    class="bg-[#C2CAD0] min-h-fit p-28 rounded-3xl"
-    msg="Vite + Vue"
-  />
-  <div class="hidden">
-    <PlayerVsPlayer></PlayerVsPlayer>
+  <div>
+    <HelloWorld class="min-h-fit rounded-3xl" :class="{'hidden': !activeMain}" @handle-click-p-v-p="handleClickPVP" />
+  </div>
+  <div :class="{'hidden': !activePVP}" class="2">
+    <PlayerVsPlayer @handle-click-out="handleClickOut"></PlayerVsPlayer>
   </div>
 </template>
 
