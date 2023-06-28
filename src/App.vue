@@ -1,11 +1,16 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import PlayerVsPlayer from "./components/PlayerVsPlayer.vue"
+import HelloWorld from "./components/HelloWorld.vue";
+import PlayerVsPlayer from "./components/PlayerVsPlayer.vue";
 </script>
 
-<template >
-  <!-- <HelloWorld class="bg-[#F4F5FA]" msg="Vite + Vue" /> -->
-  <PlayerVsPlayer></PlayerVsPlayer>
+<template>
+  <HelloWorld
+    class="bg-[#C2CAD0] min-h-fit p-28 rounded-3xl"
+    msg="Vite + Vue"
+  />
+  <div class="hidden">
+    <PlayerVsPlayer></PlayerVsPlayer>
+  </div>
 </template>
 
 <style scoped>
