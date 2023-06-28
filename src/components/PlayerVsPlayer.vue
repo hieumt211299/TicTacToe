@@ -5,6 +5,10 @@ import BoardGameRow from "./TableCaro/BoardGameRow.vue";
 interface Emits {
   (event: "handleClickOut"): void;
 }
+interface test {
+  myArray: []
+}
+
 const emit = defineEmits<Emits>();
 const player1 = ref<boolean>(true);
 const boards = ref<{}>([]);
@@ -13,9 +17,10 @@ const size = ref<number>(20);
 const gameOver = ref<boolean>(false)
 const count = ref<number>(1)
 
+// --------------------------
 // create table
 for (let i = 0; i < size.value; i++) {
-  boards.value[i] = new Array();
+  boards.value[i] = [];
   for (let j = 0; j < size.value; j++) {
     boards.value[i].push("");
   }
@@ -127,7 +132,7 @@ const handleClickOut = () => {
   resetAll()
   emit('handleClickOut')
 }
-
+// --------------------------
 
 </script>
 <template>

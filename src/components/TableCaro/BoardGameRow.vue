@@ -18,14 +18,8 @@ const handleClick = (indexCol) => {
 </script>
 <template>
   <div class="flex border-collapse">
-    <BoardGameCol
-      v-for="(col, index) in props.row"
-      :key="index"
-      :col="col"
-      :indexCol="index"
-      :indexRow="indexRow"
-      @handle-click="handleClick"
-    ></BoardGameCol>
+    <BoardGameCol v-for="(col, index) in props.row" :key="index" :col="col" :indexCol="index" :indexRow="indexRow"
+      @handle-click="handleClick"></BoardGameCol>
   </div>
 </template>
 <style></style>
