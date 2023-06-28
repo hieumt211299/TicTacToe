@@ -4,7 +4,6 @@ import BoardGameCol from "./BoardGameCol.vue";
 interface Props {
   row: string[];
   indexRow: number;
-  boards: {};
 }
 const props = defineProps<Props>();
 
@@ -25,7 +24,6 @@ const handleClick = (indexCol) => {
       :col="col"
       :indexCol="index"
       :indexRow="indexRow"
-      :boards="boards"
       @handle-click="handleClick"
     ></BoardGameCol>
   </div>

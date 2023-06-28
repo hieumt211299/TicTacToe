@@ -1,25 +1,25 @@
 <script setup lang="ts">
 import HelloWorld from "./components/HelloWorld.vue";
 import PlayerVsPlayer from "./components/PlayerVsPlayer.vue";
-import { ref,unref } from "vue";
+import { ref, unref } from "vue";
 
 const activePVP = ref<boolean>(false)
 const activeMain = ref<boolean>(true)
-const handleClickPVP=()=>{
-activePVP.value=!unref(activePVP);
-activeMain.value=!unref(activeMain)
+const handleClickPVP = () => {
+  activePVP.value = !unref(activePVP);
+  activeMain.value = !unref(activeMain)
 }
-const handleClickOut=()=>{
-  activePVP.value=!unref(activePVP);
-activeMain.value=!unref(activeMain)
+const handleClickOut = () => {
+  activePVP.value = !unref(activePVP);
+  activeMain.value = !unref(activeMain)
 }
 </script>
 
 <template>
   <div>
-    <HelloWorld class="min-h-fit rounded-3xl" :class="{'hidden': !activeMain}" @handle-click-p-v-p="handleClickPVP" />
+    <HelloWorld class="min-h-fit rounded-3xl" :class="{ 'hidden': !activeMain }" @handle-click-p-v-p="handleClickPVP" />
   </div>
-  <div :class="{'hidden': !activePVP}" class="2">
+  <div :class="{ 'hidden': !activePVP }" class="2">
     <PlayerVsPlayer @handle-click-out="handleClickOut"></PlayerVsPlayer>
   </div>
 </template>
@@ -35,6 +35,7 @@ activeMain.value=!unref(activeMain)
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
