@@ -5,17 +5,15 @@ import BoardGameRow from "./TableCaro/BoardGameRow.vue";
 interface Emits {
   (event: "handleClickOut"): void;
 }
-interface test {
-  myArray: []
-}
+
 
 const emit = defineEmits<Emits>();
 const player1 = ref<boolean>(true);
-const boards = ref<{}>([]);
+const boards = ref<string[][]>([]);
 const winner = ref<string>("");
 const size = ref<number>(20);
 const gameOver = ref<boolean>(false)
-const count = ref<number>(1)
+const count = ref<number[]>([1, 1, 1, 1])
 
 // --------------------------
 // create table
@@ -26,97 +24,117 @@ for (let i = 0; i < size.value; i++) {
   }
 }
 provide('test1', boards.value)
+provide('player1', player1)
+// ==========
 
 const whenWin = () => {
   winner.value = player1.value ? 'O' : 'X'
   gameOver.value = !gameOver.value
 }
 const checkWin = (x) => {
-  x >= 5 ? whenWin() : 0
+  for (let i = 0; i < 4; i++) {
+    x[i] >= 5 ? whenWin() : 0
+  }
+
 }
+
 const resetCount = () => {
-  count.value = 1
+  count.value = [1, 1, 1, 1]
 }
 const handleClick = (indexCol, indexRow) => {
-
   if (boards.value[indexRow][indexCol] === "") {
     if (player1.value) {
-      boards.value[indexRow][indexCol] = "X";
+      boards.value[indexRow][indexCol] = "/src/assets/imgs/X.png";
     } else {
-      boards.value[indexRow][indexCol] = "O";
+      boards.value[indexRow][indexCol] = "/src/assets/imgs/O.png";
     }
     player1.value = !player1.value;
-  }
-  // hang ngang
-  resetCount()
-  for (let i = 1; i <= 4; i++) {
-    if (boards.value[indexRow][indexCol] !== boards.value[indexRow][indexCol + i]) {
-      break;
-    }
-    count.value++;
-  }
-  for (let i = 1; i <= 4; i++) {
-    if (boards.value[indexRow][indexCol] !== boards.value[indexRow][indexCol - i]) {
-      break;
-    }
-    count.value++;
-  }
-  checkWin(count.value)
+    resetCount()
+    for (let i = 1; i <= 4; i++) {
 
-  //   // hang doc
-  resetCount()
-  for (let i = 1; i <= 4 && indexRow + i < size.value; i++) {
-    if (boards.value[indexRow][indexCol] !== boards.value[indexRow + i][indexCol]) {
-      break;
-    }
-    count.value++;
-  }
-  for (let i = 1; i <= 4 && indexRow - i >= 0; i++) {
-    if (boards.value[indexRow][indexCol] !== boards.value[indexRow - i][indexCol]) {
-      break;
-    }
-    count.value++;
-  }
-  checkWin(count.value)
-
-  // duong cheo
-  resetCount()
-  for (let i = 1; i <= 4 && indexCol - i >= 0 && indexRow + i < size.value; i++) {
-    if (boards.value[indexRow][indexCol] !== boards.value[indexRow + i][indexCol - i]) {
-      break;
-    }
-    count.value++;
-  }
-  for (let i = 1; i <= 4 && indexRow - i >= 0 && indexCol + i >= 0; i++) {
-    if (boards.value[indexRow][indexCol] !== boards.value[indexRow - i][indexCol + i]) {
-      break;
-    }
-    count.value++;
-  }
-  checkWin(count.value)
-  // duong cheo
-  resetCount()
-  for (let i = 1; i <= 4; i++) {
-    if (indexCol + i <= size.value && indexRow + i < size.value) {
-      if (
-        boards.value[indexRow][indexCol] ===
-        boards.value[indexRow + i][indexCol + i]
-      ) {
-        count.value++
+      if ((indexRow + i < size.value && boards.value[indexRow][indexCol] === boards.value[indexRow + i][indexCol])) {
+        count.value[1]++;
       }
+      if ((indexRow - i >= 0 && boards.value[indexRow][indexCol] === boards.value[indexRow - i][indexCol])) {
+        count.value[1]++;
+      }
+
+      if (indexCol - i >= 0 && indexRow + i < size.value && boards.value[indexRow][indexCol] === boards.value[indexRow + i][indexCol - i]) {
+        count.value[2]++;
+      }
+      if (indexRow - i >= 0 && indexCol + i >= 0 && boards.value[indexRow][indexCol] === boards.value[indexRow - i][indexCol + i]) {
+        count.value[2]++
+      }
+      if (indexCol + i <= size.value && indexRow + i < size.value && boards.value[indexRow][indexCol] === boards.value[indexRow + i][indexCol + i]) {
+        count.value[3]++
+      }
+      if (indexCol - i >= 0 && indexRow - i >= 0 && boards.value[indexRow][indexCol] === boards.value[indexRow - i][indexCol - i]) {
+        count.value[3]++
+      }
+      if (boards.value[indexRow][indexCol] !== boards.value[indexRow][indexCol + i] && boards.value[indexRow][indexCol] !== boards.value[indexRow][indexCol - i]) {
+      } else { count.value[0]++; }
     }
+    checkWin(count.value)
+    // {//   // hang doc
+
+    // // for (let i = 1; i <= 4 && indexRow + i < size.value; i++) {
+    // //   if (boards.value[indexRow][indexCol] !== boards.value[indexRow + i][indexCol]) {
+    // //     break;
+    // //   }
+    // //   count.value++;
+    // // }
+    // // for (let i = 1; i <= 4 && indexRow - i >= 0; i++) {
+    // //   if (boards.value[indexRow][indexCol] !== boards.value[indexRow - i][indexCol]) {
+    // //     break;
+    // //   }
+    // //   count.value++;
+    // // }
+    // // ====
+    // // for (let i = 1; i <= 4; i++) {
+    // //   indexRow + i < size.value ? boards.value[indexRow][indexCol] !== boards.value[indexRow + i][indexCol] ? 0 : count.value++ : 0
+    // //   indexRow - i >= 0 ? boards.value[indexRow][indexCol] !== boards.value[indexRow - i][indexCol] ? 0 : count.value++ : 0
+    // // }
+    // for (let i = 1; i <= 4; i++) {
+
+    // }
+    // /**======= */
+
+    // // for (let i = 1; i <= 4; i++) {
+    // //   if (indexRow + i < size.value && boards.value[indexRow][indexCol] !== boards.value[indexRow + i][indexCol]) {
+    // //     break
+    // //   }
+    // //   if (indexRow - i >= 0 && boards.value[indexRow][indexCol] !== boards.value[indexRow - i][indexCol]) {
+    // //     break
+    // //   }
+
+
+    // //   count.value++
+    // // }
+
+
+    // // ====
+    // checkWin(count.value)
+    // // duong cheo
+    // resetCount()
+    // for (let i = 1; i <= 4; i++) {
+
+    // }
+    // checkWin(count.value)
+    // // duong cheo
+    // resetCount()
+    // for (let i = 1; i <= 4; i++) {
+
+    // }
+
+    // // 
+    // // for (let i = 1; i <= 4; i++) {
+    // //   indexCol + i <= size.value ? indexRow + i < size.value ? boards.value[indexRow][indexCol] === boards.value[indexRow + i][indexCol + i] ? 0 : count.value++ : 0 : 0
+    // //   indexCol - i >= 0 ? indexRow - i >= 0 ? boards.value[indexRow][indexCol] ===
+    // //     boards.value[indexRow - i][indexCol - i] ? 0 : count.value++ : 0 : 0
+    // // }
+    // // 
+    // }
   }
-  for (let i = 1; i <= 4; i++) {
-    if (indexCol - i >= 0 && indexRow - i >= 0) {
-      if (
-        boards.value[indexRow][indexCol] ===
-        boards.value[indexRow - i][indexCol - i]
-      ) {
-        count.value++
-      } else break
-    }
-  }
-  checkWin(count.value)
 };
 const resetAll = () => {
   for (let i = 0; i < size.value; i++) {
@@ -132,8 +150,6 @@ const handleClickOut = () => {
   resetAll()
   emit('handleClickOut')
 }
-// --------------------------
-
 </script>
 <template>
   <div class="flex gap-5 relative">
@@ -149,7 +165,6 @@ const handleClickOut = () => {
       <BoardGameRow v-for="(row, index) in boards" :key="index" :row="row" :indexRow="index" :boards="boards"
         @handle-click="handleClick"></BoardGameRow>
     </div>
-
   </div>
   <div class="bg-[#B3C890]  rounded-lg z-10 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-opacity-90"
     :class="{ 'hidden': !gameOver }">

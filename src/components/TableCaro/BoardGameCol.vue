@@ -3,6 +3,9 @@ import { ref, inject } from "vue";
 
 const test3 = inject('test1')
 const board = ref<{}>(test3 ? test3 : {})
+const imgX = ref<string>("/src/assets/imgs/X.png")
+const imgO = ref<string>("/src/assets/imgs/O.png")
+const player1 = inject('player1')
 interface Props {
   col: string;
   indexCol: number;
@@ -22,7 +25,7 @@ const handleClick = () => {
 <template>
   <div class="w-8 h-8 flex items-center justify-center border border-collapse border-gray-700 cursor-pointer bg-gray-200"
     @click="handleClick">
-    {{ board[props.indexRow][props.indexCol] }}
+    <img :src="board[props.indexRow][props.indexCol]" class="p-1" alt="">
   </div>
 </template>
 <style></style>
