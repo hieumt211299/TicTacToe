@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import { ref, provide } from "vue";
-import BoardGameRow from "./TableCaro/BoardGameRow.vue";
+import BoardGameRow from "./TableCaro/BoardGameRow.vue"
 
 interface Emits {
   (event: "handleClickOut"): void;
 }
-
-
 const emit = defineEmits<Emits>();
-const player1 = ref<boolean>(true);
+
+const player = ref<boolean>(true);
 const boards = ref<string[][]>([]);
 const winner = ref<string>("");
 const size = ref<number>(20);
 const gameOver = ref<boolean>(false)
 const count = ref<number[]>([1, 1, 1, 1])
 
-// --------------------------
+
 // create table
 for (let i = 0; i < size.value; i++) {
   boards.value[i] = [];
@@ -23,12 +22,11 @@ for (let i = 0; i < size.value; i++) {
     boards.value[i].push("");
   }
 }
-provide('test1', boards.value)
-provide('player1', player1)
-// ==========
+provide('provideBoard', boards)
+
 
 const whenWin = () => {
-  winner.value = player1.value ? 'O' : 'X'
+  winner.value = player.value ? 'O' : 'X'
   gameOver.value = !gameOver.value
 }
 const checkWin = (x) => {
@@ -43,12 +41,12 @@ const resetCount = () => {
 }
 const handleClick = (indexCol, indexRow) => {
   if (boards.value[indexRow][indexCol] === "") {
-    if (player1.value) {
+    if (player.value) {
       boards.value[indexRow][indexCol] = "/src/assets/imgs/X.png";
     } else {
       boards.value[indexRow][indexCol] = "/src/assets/imgs/O.png";
     }
-    player1.value = !player1.value;
+    player.value = !player.value;
     resetCount()
     for (let i = 1; i <= 4; i++) {
 
@@ -150,6 +148,7 @@ const handleClickOut = () => {
   resetAll()
   emit('handleClickOut')
 }
+
 </script>
 <template>
   <div class="flex gap-5 relative">
@@ -162,8 +161,8 @@ const handleClickOut = () => {
       </button>
     </div>
     <div :class="{ 'pointer-events-none': gameOver }">
-      <BoardGameRow v-for="(row, index) in boards" :key="index" :row="row" :indexRow="index" :boards="boards"
-        @handle-click="handleClick"></BoardGameRow>
+      <board-game-row v-for="(row, index) in boards" :key="index" :row="row" :indexRow="index" :boards="boards"
+        @handle-click="handleClick"></board-game-row>
     </div>
   </div>
   <div class="bg-[#B3C890]  rounded-lg z-10 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-opacity-90"

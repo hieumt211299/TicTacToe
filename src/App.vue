@@ -17,10 +17,11 @@ const handleClickOut = () => {
 
 <template>
   <div>
-    <HelloWorld class="min-h-fit rounded-3xl" :class="{ 'hidden': !activeMain }" @handle-click-p-v-p="handleClickPVP" />
+    <hello-world class="min-h-fit rounded-3xl" :class="{ 'hidden': !activeMain }"
+      @handle-click-p-v-p="handleClickPVP"></hello-world>
   </div>
   <div :class="{ 'hidden': !activePVP }" class="2">
-    <PlayerVsPlayer @handle-click-out="handleClickOut"></PlayerVsPlayer>
+    <player-vs-player @handle-click-out="handleClickOut"></player-vs-player>
   </div>
 </template>
 
