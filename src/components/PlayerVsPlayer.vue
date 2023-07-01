@@ -2,6 +2,31 @@
 import { ref, provide } from "vue";
 import BoardGameRow from "./TableCaro/BoardGameRow.vue"
 
+
+var addBinary = function (a: string, b: string) {
+  let result = [];
+  let arrayA = a.split('')
+  let arrayB = b.split('')
+  let diff = arrayA.length - arrayB.length
+  if (diff > 0) {
+    for (let i = 0; i < diff; i++) {
+      arrayB.unshift('0')
+    }
+  } else {
+    for (let i = 0; i < diff; i++) {
+      arrayB.unshift('0')
+    }
+  }
+  console.log(arrayA, arrayB);
+  for (let i = 0; i <= arrayA.length - 1; i++) {
+    console.log(arrayA[arrayA.length - 1 - i], arrayB[arrayB.length - 1 - i]);
+    if (arrayA[arrayA.length - 1 - i] + arrayB[arrayB.length - 1 - i] == 2) {
+      console.log(2);
+    }
+  }
+};
+
+addBinary("1010", "11")
 interface Emits {
   (event: "handleClickOut"): void;
 }
@@ -13,8 +38,6 @@ const winner = ref<string>("");
 const size = ref<number>(20);
 const gameOver = ref<boolean>(false)
 const count = ref<number[]>([1, 1, 1, 1])
-
-
 // create table
 for (let i = 0; i < size.value; i++) {
   boards.value[i] = [];
@@ -140,9 +163,9 @@ const resetAll = () => {
     for (let j = 0; j < size.value; j++) {
       boards.value[i].push("");
     }
-    gameOver.value = false
-
   }
+
+  gameOver.value = false
 }
 const handleClickOut = () => {
   resetAll()

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, inject } from "vue";
+import { inject, Ref } from "vue";
 
 // const injectBoards = inject<string[][]>('provideBoard')
 // const board = ref<string[][]>(injectBoards || [])
-const injectBoards = inject('provideBoard') || []
+const injectBoards = inject<Ref<string[][]>>('provideBoard') || []
 
 interface Props {
   col: string;
@@ -24,7 +24,7 @@ const handleClick = () => {
 <template>
   <div class="w-8 h-8 flex items-center justify-center border border-collapse border-gray-700 cursor-pointer bg-gray-200"
     @click="handleClick">
-    <img :src="injectBoards[props.indexRow][props.indexCol]" class="p-1" alt="">
+    <img :src="injectBoards[props.indexRow][props.indexCol]" class="p-1">
   </div>
 </template>
 <style></style>
